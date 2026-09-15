@@ -1,19 +1,19 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="es">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Minha corretagem · Imóveis Assunção</title>
+    <title>Mi corretaje · Inmuebles Asunción</title>
     <meta
       name="description"
-      content="Calculadora de comissão do corretor: venda ou aluguel, em dólar, guarani ou real."
+      content="Calculadora de comisión del agente inmobiliario: venta o alquiler, en dólar, guaraní y real."
     />
     <meta name="robots" content="noindex" />
     <link
       rel="icon"
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23252526'/><text y='72' x='50' font-size='60' text-anchor='middle' fill='%23beaf88' font-family='sans-serif'>C</text></svg>"
     />
-    <style>
+<style>
       /* Cores oficiais da Century 21: Obsessed Grey #252526 e Relentless
          Gold #BEAF88 — as mesmas do painel em /admin/corretagem. */
       :root {
@@ -285,6 +285,60 @@
         color: var(--muted);
         margin: 10px 0 0;
       }
+
+      /* Seletor de idioma ------------------------------------------- */
+      .idiomas {
+        display: flex;
+        gap: 4px;
+      }
+      .idiomas button {
+        padding: 5px 10px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        border: 1px solid transparent;
+        border-radius: 7px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      .idiomas button:hover {
+        color: var(--fg);
+      }
+      .idiomas button[aria-pressed="true"] {
+        background: var(--brand);
+        border-color: var(--brand);
+        color: var(--brand-contrast);
+      }
+      .idiomas button:focus-visible {
+        outline: 2px solid var(--gold);
+        outline-offset: 1px;
+      }
+
+      /* Cotações (somente leitura, vindas do Brascambio) -------------- */
+      .cotacoes-info {
+        display: grid;
+        gap: 10px;
+      }
+      .cotacoes-linha {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px 16px;
+      }
+      .cotacoes-par {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+      }
+      .cotacoes-carimbo {
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .cotacoes-info a {
+        color: var(--heading);
+      }
+
       footer {
         max-width: 760px;
         margin: 0 auto;
@@ -295,164 +349,284 @@
       [hidden] {
         display: none !important;
       }
-    </style>
-  </head>
+    </style>  </head>
   <body>
     <header>
       <div class="bar">
-        <span class="brand">Imóveis Assunção · Corretagem</span>
-        <button id="tema" type="button" aria-label="Alternar modo escuro">
-          Modo escuro
-        </button>
+        <span class="brand" data-t="marca">Imóveis Assunção</span>
+        <div class="idiomas" role="group" data-t-attr="aria-label:idiomas">
+          <button type="button" data-idioma="es" aria-pressed="true">ES</button>
+          <button type="button" data-idioma="pt" aria-pressed="false">PT</button>
+          <button type="button" data-idioma="en" aria-pressed="false">EN</button>
+          <button id="tema" type="button" data-t="temaEscuro">Modo oscuro</button>
+        </div>
       </div>
     </header>
 
     <main>
-      <h1>Minha corretagem</h1>
-      <p class="intro">
-        Informe o valor do negócio e veja quanto sobra para você depois dos
-        repasses, nas três moedas. A comissão é a que o cliente aceita no
-        cadastro — venda, 2,75% sobre o valor total da compra; aluguel, 50% do
-        valor equivalente a um aluguel — e dela saem Century 21 Nacional e
-        Century 21 Black, deixando 45% com você.
-      </p>
+      <h1 data-t="titulo">Mi corretaje</h1>
+      <p class="intro" data-t="intro"></p>
 
       <div class="card">
         <fieldset>
-          <legend>Tipo de negócio</legend>
+          <legend data-t="tipoNegocio">Tipo de negocio</legend>
           <div class="segmented">
             <label>
               <input type="radio" name="tipo" value="COMPRA" checked />
-              Venda
+              <span data-t="venda">Venta</span>
             </label>
             <label>
               <input type="radio" name="tipo" value="ALUGUEL" />
-              Aluguel
+              <span data-t="aluguel">Alquiler</span>
             </label>
           </div>
         </fieldset>
 
         <div class="row">
           <div>
-            <label class="label" for="valor" id="valorRotulo">
-              Valor da venda
-            </label>
+            <label class="label" for="valor" id="valorRotulo"></label>
             <input
               id="valor"
               type="text"
               inputmode="decimal"
               autocomplete="off"
-              placeholder="Ex: 350.000"
+              placeholder="350.000"
             />
           </div>
           <div>
-            <label class="label" for="moeda">Moeda</label>
+            <label class="label" for="moeda" data-t="moeda">Moneda</label>
             <select id="moeda">
-              <option value="USD">Dólar (US$)</option>
-              <option value="PYG">Guarani (₲)</option>
-              <option value="BRL">Real (R$)</option>
+              <option value="USD"></option>
+              <option value="PYG"></option>
+              <option value="BRL"></option>
             </select>
           </div>
         </div>
 
-        <p class="erro" id="erro" hidden>
-          Digite um valor válido, só com números (ex: 350.000 ou 350000).
-        </p>
+        <p class="erro" id="erro" hidden></p>
       </div>
 
       <div class="card">
-        <p class="resultado-rotulo">Quanto fica com você (45% da comissão)</p>
+        <p class="resultado-rotulo" id="resultadoRotulo"></p>
         <p class="resultado" id="resultado">—</p>
         <div class="cascata" id="cascata" hidden>
           <dl id="listaCascata"></dl>
         </div>
         <div class="equivalencias" id="equivalencias" hidden>
-          <span class="resultado-rotulo">Sua parte equivale a</span>
+          <span class="resultado-rotulo" data-t="equivaleA"></span>
           <dl id="listaEquivalencias"></dl>
         </div>
       </div>
 
-      <details class="card cotacoes">
-        <summary>Cotações usadas na conversão</summary>
-        <div class="row">
-          <div>
-            <label class="label" for="usdToPyg">1 US$ equivale a quantos ₲</label>
-            <input id="usdToPyg" type="number" min="0" step="any" />
-          </div>
-          <div>
-            <label class="label" for="usdToBrl">1 US$ equivale a quantos R$</label>
-            <input id="usdToBrl" type="number" min="0" step="any" />
-          </div>
+      <div class="card cotacoes-info">
+        <div class="cotacoes-linha">
+          <span class="resultado-rotulo" data-t="cotacoesTitulo"></span>
+          <span class="cotacoes-carimbo" id="cotacoesCarimbo"></span>
         </div>
-        <div class="acoes">
-          <button id="restaurar" type="button">Restaurar padrão</button>
-          <span class="nota" id="statusCotacoes"></span>
+        <div class="cotacoes-linha">
+          <span data-t="dolarEmGuarani"></span>
+          <span class="cotacoes-par" id="parPyg">—</span>
         </div>
-        <p class="nota">
-          As cotações ficam salvas só neste navegador, neste aparelho — em
-          outro celular ou computador você precisa informá-las de novo.
-        </p>
-      </details>
+        <div class="cotacoes-linha">
+          <span data-t="dolarEmReal"></span>
+          <span class="cotacoes-par" id="parBrl">—</span>
+        </div>
+        <p class="nota" id="cotacoesNota"></p>
+      </div>
     </main>
 
-    <footer>
-      Versão avulsa da página <code>/admin/corretagem</code> do app Imóveis
-      Assunção, para consulta rápida fora do sistema. A conta é feita no
-      próprio navegador: nada do que você digita aqui é enviado ou guardado
-      em nenhum servidor.
-    </footer>
-
+    <footer id="rodape"></footer>
     <script>
       "use strict";
 
-      // Mesmas regras de src/lib/commission.ts — se mudar uma taxa lá, mude
-      // aqui também (e no texto mostrado ao cliente, em dictionaries.ts).
+      // Taxas da comissão e a cascata de repasses. Iguais às de
+      // src/lib/commission.ts no repositório imoveis-assuncao.
       var TAXAS = { COMPRA: 0.0275, ALUGUEL: 0.5 };
-      var REGRAS = {
-        COMPRA: "2,75% sobre o valor total da compra",
-        ALUGUEL: "50% do valor equivalente a um aluguel",
-      };
-      // A comissão é repartida em cascata: cada repasse incide sobre o saldo
-      // que sobrou do anterior. 0,5 x 0,9 deixa 45% com o corretor.
       var REPASSES = [
-        { rotulo: "Century 21 Nacional", taxa: 0.5 },
-        { rotulo: "Century 21 Black", taxa: 0.1 },
+        { chave: "nacional", rotulo: "Century 21 Nacional", taxa: 0.5 },
+        { chave: "black", rotulo: "Century 21 Black", taxa: 0.1 },
       ];
-      var ROTULOS_VALOR = {
-        COMPRA: "Valor da venda",
-        ALUGUEL: "Valor do aluguel mensal",
-      };
       var MOEDAS = ["USD", "PYG", "BRL"];
-      var NOMES_MOEDA = {
-        USD: "Dólar (US$)",
-        PYG: "Guarani (₲)",
-        BRL: "Real (R$)",
-      };
       var SIMBOLOS = { USD: "US$", PYG: "₲", BRL: "R$" };
-      var COTACOES_PADRAO = { usdToPyg: 7300, usdToBrl: 5.4 };
-      var CHAVE_COTACOES = "corretagem:cotacoes";
+
+      // Último valor conhecido, usado só se cotacoes.json não carregar.
+      var COTACOES_RESERVA = { usdToPyg: 5764, usdToBrl: 5.24 };
+
+      var IDIOMAS = ["es", "pt", "en"];
+      var IDIOMA_PADRAO = "es";
+      var LOCALES = { es: "es-PY", pt: "pt-BR", en: "en-US" };
+      var CHAVE_IDIOMA = "corretagem:idioma";
       var CHAVE_TEMA = "corretagem:tema";
 
-      // localStorage pode estar bloqueado (aba anônima, cookies desligados),
-      // então toda leitura/escrita é protegida e a página segue funcionando.
-      function ler(chave) {
+      var TEXTOS = {
+        es: {
+          idiomas: "Idioma",
+          marca: "Imóveis Assunção",
+          titulo: "Mi corretaje",
+          intro:
+            "Ingresá el valor del negocio y mirá cuánto te queda después de los traspasos, en las tres monedas. La comisión es la que el cliente acepta al registrarse — venta, 2,75% sobre el valor total de la compra; alquiler, 50% del equivalente a un alquiler — y de ella salen Century 21 Nacional y Century 21 Black, dejándote el 45%.",
+          tipoNegocio: "Tipo de negocio",
+          venda: "Venta",
+          aluguel: "Alquiler",
+          valorVenda: "Valor de la venta",
+          valorAluguel: "Valor del alquiler mensual",
+          moeda: "Moneda",
+          moedas: {
+            USD: "Dólar (US$)",
+            PYG: "Guaraní (₲)",
+            BRL: "Real (R$)",
+          },
+          erro: "Escribí un valor sólo con números (por ejemplo 350.000 o 350000).",
+          quantoFica: "Cuánto te queda ({fatia} de la comisión)",
+          comissaoDoNegocio: "Comisión del negocio",
+          regras: {
+            COMPRA: "2,75% sobre el valor total de la compra",
+            ALUGUEL: "50% del equivalente a un alquiler",
+          },
+          doSaldo: "del saldo",
+          suaCorretagem: "Tu corretaje",
+          equivaleA: "Tu parte en las otras monedas",
+          cotacoesTitulo: "Cotizaciones",
+          dolarEmGuarani: "1 dólar en guaraníes",
+          dolarEmReal: "1 dólar en reales",
+          cotacoesNota:
+            "Cotizaciones de {fonte}, sucursal Matriz. El guaraní por dólar no lo publican: sale de {gsPorReal} Gs por real (transferencia) × {reaisPorDolar} reales por dólar.",
+          cotacoesReserva:
+            "No se pudieron leer las cotizaciones ahora; se muestran las últimas conocidas.",
+          carimbo: "Publicadas el {quando}",
+          temaEscuro: "Modo oscuro",
+          temaClaro: "Modo claro",
+          rodape:
+            "Versión de bolsillo de la página de corretaje de Imóveis Assunção. La cuenta se hace en tu navegador: el valor que escribís no se envía ni se guarda en ningún servidor.",
+        },
+        pt: {
+          idiomas: "Idioma",
+          marca: "Imóveis Assunção",
+          titulo: "Minha corretagem",
+          intro:
+            "Informe o valor do negócio e veja quanto sobra para você depois dos repasses, nas três moedas. A comissão é a que o cliente aceita no cadastro — venda, 2,75% sobre o valor total da compra; aluguel, 50% do valor equivalente a um aluguel — e dela saem Century 21 Nacional e Century 21 Black, deixando 45% com você.",
+          tipoNegocio: "Tipo de negócio",
+          venda: "Venda",
+          aluguel: "Aluguel",
+          valorVenda: "Valor da venda",
+          valorAluguel: "Valor do aluguel mensal",
+          moeda: "Moeda",
+          moedas: {
+            USD: "Dólar (US$)",
+            PYG: "Guarani (₲)",
+            BRL: "Real (R$)",
+          },
+          erro: "Digite um valor só com números (por exemplo 350.000 ou 350000).",
+          quantoFica: "Quanto fica com você ({fatia} da comissão)",
+          comissaoDoNegocio: "Comissão do negócio",
+          regras: {
+            COMPRA: "2,75% sobre o valor total da compra",
+            ALUGUEL: "50% do valor equivalente a um aluguel",
+          },
+          doSaldo: "do saldo",
+          suaCorretagem: "Sua corretagem",
+          equivaleA: "Sua parte nas outras moedas",
+          cotacoesTitulo: "Cotações",
+          dolarEmGuarani: "1 dólar em guaranis",
+          dolarEmReal: "1 dólar em reais",
+          cotacoesNota:
+            "Cotações do {fonte}, filial Matriz. O guarani por dólar não é publicado: sai de {gsPorReal} Gs por real (transferência) × {reaisPorDolar} reais por dólar.",
+          cotacoesReserva:
+            "Não deu para ler as cotações agora; estão sendo mostradas as últimas conhecidas.",
+          carimbo: "Publicadas em {quando}",
+          temaEscuro: "Modo escuro",
+          temaClaro: "Modo claro",
+          rodape:
+            "Versão de bolso da página de corretagem do Imóveis Assunção. A conta é feita no seu navegador: o valor que você digita não é enviado nem guardado em servidor nenhum.",
+        },
+        en: {
+          idiomas: "Language",
+          marca: "Imóveis Assunção",
+          titulo: "My commission",
+          intro:
+            "Enter the deal value and see what you keep after the splits, in all three currencies. The commission is the one the client accepts at sign-up — sale, 2.75% of the total purchase value; rental, 50% of one month's rent — and out of it come Century 21 Nacional and Century 21 Black, leaving you 45%.",
+          tipoNegocio: "Deal type",
+          venda: "Sale",
+          aluguel: "Rental",
+          valorVenda: "Sale value",
+          valorAluguel: "Monthly rent",
+          moeda: "Currency",
+          moedas: {
+            USD: "Dollar (US$)",
+            PYG: "Guarani (₲)",
+            BRL: "Real (R$)",
+          },
+          erro: "Enter a value using digits only (for example 350,000 or 350000).",
+          quantoFica: "What you keep ({fatia} of the commission)",
+          comissaoDoNegocio: "Deal commission",
+          regras: {
+            COMPRA: "2.75% of the total purchase value",
+            ALUGUEL: "50% of one month's rent",
+          },
+          doSaldo: "of the balance",
+          suaCorretagem: "Your commission",
+          equivaleA: "Your share in the other currencies",
+          cotacoesTitulo: "Exchange rates",
+          dolarEmGuarani: "1 dollar in guaranis",
+          dolarEmReal: "1 dollar in reais",
+          cotacoesNota:
+            "Rates from {fonte}, Matriz branch. Guarani per dollar is not published: it comes from {gsPorReal} Gs per real (transfer) × {reaisPorDolar} reais per dollar.",
+          cotacoesReserva:
+            "Could not read the rates right now; showing the last known ones.",
+          carimbo: "Published {quando}",
+          temaEscuro: "Dark mode",
+          temaClaro: "Light mode",
+          rodape:
+            "Pocket version of the Imóveis Assunção commission page. The maths runs in your browser: the value you type is never sent or stored anywhere.",
+        },
+      };
+
+      var idioma = IDIOMA_PADRAO;
+      var cotacoes = COTACOES_RESERVA;
+      var cotacoesCompletas = null;
+
+      function t(chave) {
+        return TEXTOS[idioma][chave];
+      }
+      function preencher(texto, valores) {
+        return texto.replace(/\{(\w+)\}/g, function (_, chave) {
+          return valores[chave] != null ? valores[chave] : "";
+        });
+      }
+
+      // localStorage pode estar bloqueado (aba anônima, cookies desligados).
+      function lerLocal(chave) {
         try {
           return window.localStorage.getItem(chave);
         } catch (e) {
           return null;
         }
       }
-      function gravar(chave, valor) {
+      function gravarLocal(chave, valor) {
         try {
           window.localStorage.setItem(chave, valor);
-          return true;
         } catch (e) {
-          return false;
+          /* segue sem lembrar a escolha */
         }
       }
 
-      // Aceita o formato brasileiro ("350.000", "2.750,80") e o formato com
-      // ponto decimal ("350000.50"), ignorando símbolos de moeda colados.
+      var el = function (id) {
+        return document.getElementById(id);
+      };
+      var elValor = el("valor");
+      var elValorRotulo = el("valorRotulo");
+      var elMoeda = el("moeda");
+      var elErro = el("erro");
+      var elResultado = el("resultado");
+      var elResultadoRotulo = el("resultadoRotulo");
+      var elCascata = el("cascata");
+      var elListaCascata = el("listaCascata");
+      var elEquivalencias = el("equivalencias");
+      var elLista = el("listaEquivalencias");
+      var elTema = el("tema");
+
+      // Aceita "350.000", "2.750,80" e "350000.50", ignorando símbolos de
+      // moeda colados no valor.
       function lerValor(bruto) {
         var limpo = bruto.replace(/[^\d.,-]/g, "").trim();
         if (!limpo) return null;
@@ -480,27 +654,26 @@
         return numero;
       }
 
-      function formatarTaxa(taxa) {
-        return (
-          (taxa * 100).toLocaleString("pt-BR", { maximumFractionDigits: 2 }) + "%"
-        );
+      function numero(valor, casas) {
+        return valor.toLocaleString(LOCALES[idioma], {
+          minimumFractionDigits: casas,
+          maximumFractionDigits: casas,
+        });
       }
-
       function formatar(valor, moeda) {
-        var casas = moeda === "PYG" ? 0 : 2;
+        return SIMBOLOS[moeda] + " " + numero(valor, moeda === "PYG" ? 0 : 2);
+      }
+      function taxa(valor) {
         return (
-          SIMBOLOS[moeda] +
-          " " +
-          valor.toLocaleString("pt-BR", {
-            minimumFractionDigits: casas,
-            maximumFractionDigits: casas,
-          })
+          (valor * 100).toLocaleString(LOCALES[idioma], {
+            maximumFractionDigits: 2,
+          }) + "%"
         );
       }
 
-      function converter(valor, de, para, cotacoes) {
+      function converter(valor, de, para) {
         if (de === para) return valor;
-        var paraDolar = {
+        var emDolar = {
           USD: 1,
           PYG: 1 / cotacoes.usdToPyg,
           BRL: 1 / cotacoes.usdToBrl,
@@ -510,33 +683,16 @@
           PYG: cotacoes.usdToPyg,
           BRL: cotacoes.usdToBrl,
         };
-        return valor * paraDolar[de] * doDolar[para];
+        return valor * emDolar[de] * doDolar[para];
       }
 
-      var elValor = document.getElementById("valor");
-      var elValorRotulo = document.getElementById("valorRotulo");
-      var elMoeda = document.getElementById("moeda");
-      var elErro = document.getElementById("erro");
-      var elResultado = document.getElementById("resultado");
-      var elCascata = document.getElementById("cascata");
-      var elListaCascata = document.getElementById("listaCascata");
-      var elEquivalencias = document.getElementById("equivalencias");
-      var elLista = document.getElementById("listaEquivalencias");
-      var elUsdToPyg = document.getElementById("usdToPyg");
-      var elUsdToBrl = document.getElementById("usdToBrl");
-      var elStatusCotacoes = document.getElementById("statusCotacoes");
-
-      function tipoSelecionado() {
+      function tipoAtual() {
         return document.querySelector('input[name="tipo"]:checked').value;
       }
-
-      function cotacoesAtuais() {
-        var pyg = Number(elUsdToPyg.value);
-        var brl = Number(elUsdToBrl.value);
-        return {
-          usdToPyg: pyg > 0 ? pyg : COTACOES_PADRAO.usdToPyg,
-          usdToBrl: brl > 0 ? brl : COTACOES_PADRAO.usdToBrl,
-        };
+      function fatiaDoCorretor() {
+        return REPASSES.reduce(function (resto, r) {
+          return resto * (1 - r.taxa);
+        }, 1);
       }
 
       function linhaCascata(rotulo, valorTexto, classe) {
@@ -552,13 +708,17 @@
       }
 
       function calcular() {
-        var tipo = tipoSelecionado();
+        var tipo = tipoAtual();
         var moeda = elMoeda.value;
-        var cotacoes = cotacoesAtuais();
         var bruto = elValor.value;
         var valor = lerValor(bruto);
 
-        elValorRotulo.textContent = ROTULOS_VALOR[tipo];
+        elValorRotulo.textContent =
+          tipo === "ALUGUEL" ? t("valorAluguel") : t("valorVenda");
+        elResultadoRotulo.textContent = preencher(t("quantoFica"), {
+          fatia: taxa(fatiaDoCorretor()),
+        });
+        elErro.textContent = t("erro");
         elErro.hidden = !(bruto.trim() !== "" && valor === null);
 
         if (valor === null) {
@@ -568,22 +728,22 @@
           return;
         }
 
-        var bruto = valor * TAXAS[tipo];
+        var comissao = valor * TAXAS[tipo];
 
         elListaCascata.textContent = "";
         linhaCascata(
-          "Comissão do negócio (" + REGRAS[tipo] + ")",
-          formatar(bruto, moeda),
+          t("comissaoDoNegocio") + " — " + t("regras")[tipo],
+          formatar(comissao, moeda),
         );
 
-        var saldo = bruto;
+        var saldo = comissao;
         REPASSES.forEach(function (repasse, indice) {
           var parte = saldo * repasse.taxa;
           linhaCascata(
             repasse.rotulo +
               " — " +
-              formatarTaxa(repasse.taxa) +
-              (indice === 0 ? "" : " do saldo"),
+              taxa(repasse.taxa) +
+              (indice === 0 ? "" : " " + t("doSaldo")),
             "− " + formatar(parte, moeda),
             "repasse",
           );
@@ -591,7 +751,7 @@
         });
 
         var liquido = saldo;
-        linhaCascata("Sua corretagem", formatar(liquido, moeda), "liquido");
+        linhaCascata(t("suaCorretagem"), formatar(liquido, moeda), "liquido");
         elCascata.hidden = false;
         elResultado.textContent = formatar(liquido, moeda);
 
@@ -599,95 +759,135 @@
         MOEDAS.filter(function (codigo) {
           return codigo !== moeda;
         }).forEach(function (codigo) {
-          var bloco = document.createElement("div");
+          var linha = document.createElement("div");
           var dt = document.createElement("dt");
-          dt.textContent = NOMES_MOEDA[codigo];
+          dt.textContent = t("moedas")[codigo];
           var dd = document.createElement("dd");
-          dd.textContent = formatar(
-            converter(liquido, moeda, codigo, cotacoes),
-            codigo,
-          );
-          bloco.appendChild(dt);
-          bloco.appendChild(dd);
-          elLista.appendChild(bloco);
+          dd.textContent = formatar(converter(liquido, moeda, codigo), codigo);
+          linha.appendChild(dt);
+          linha.appendChild(dd);
+          elLista.appendChild(linha);
         });
         elEquivalencias.hidden = false;
       }
 
-      function salvarCotacoes() {
-        var cotacoes = cotacoesAtuais();
-        var ok = gravar(CHAVE_COTACOES, JSON.stringify(cotacoes));
-        elStatusCotacoes.textContent = ok
-          ? "Salvo neste navegador."
-          : "Não foi possível salvar neste navegador.";
-        calcular();
-      }
+      function mostrarCotacoes() {
+        el("parPyg").textContent = formatar(cotacoes.usdToPyg, "PYG");
+        el("parBrl").textContent = formatar(cotacoes.usdToBrl, "BRL");
 
-      function aplicarCotacoes(cotacoes) {
-        elUsdToPyg.value = cotacoes.usdToPyg;
-        elUsdToBrl.value = cotacoes.usdToBrl;
-      }
-
-      function carregarCotacoes() {
-        var salvo = ler(CHAVE_COTACOES);
-        if (!salvo) return aplicarCotacoes(COTACOES_PADRAO);
-        try {
-          var cotacoes = JSON.parse(salvo);
-          aplicarCotacoes({
-            usdToPyg:
-              Number(cotacoes.usdToPyg) > 0
-                ? Number(cotacoes.usdToPyg)
-                : COTACOES_PADRAO.usdToPyg,
-            usdToBrl:
-              Number(cotacoes.usdToBrl) > 0
-                ? Number(cotacoes.usdToBrl)
-                : COTACOES_PADRAO.usdToBrl,
+        if (cotacoesCompletas) {
+          el("cotacoesCarimbo").textContent = preencher(t("carimbo"), {
+            quando: cotacoesCompletas.publicadoEm || "",
           });
-        } catch (e) {
-          aplicarCotacoes(COTACOES_PADRAO);
+          el("cotacoesNota").textContent = preencher(t("cotacoesNota"), {
+            fonte: "brascambio.com.py",
+            gsPorReal: numero(cotacoesCompletas.gsPorReal.transferencia, 0),
+            reaisPorDolar: numero(cotacoesCompletas.reaisPorDolar, 2),
+          });
+        } else {
+          el("cotacoesCarimbo").textContent = "";
+          el("cotacoesNota").textContent = t("cotacoesReserva");
         }
       }
 
-      // Tema: segue o sistema até o corretor escolher manualmente.
-      var elTema = document.getElementById("tema");
+      function aplicarIdioma(novo) {
+        idioma = IDIOMAS.indexOf(novo) === -1 ? IDIOMA_PADRAO : novo;
+        document.documentElement.lang = idioma;
+
+        document.querySelectorAll("[data-t]").forEach(function (no) {
+          var valor = t(no.getAttribute("data-t"));
+          if (typeof valor === "string") no.textContent = valor;
+        });
+        document.querySelectorAll("[data-t-attr]").forEach(function (no) {
+          var partes = no.getAttribute("data-t-attr").split(":");
+          no.setAttribute(partes[0], t(partes[1]));
+        });
+
+        Array.prototype.forEach.call(elMoeda.options, function (opcao) {
+          opcao.textContent = t("moedas")[opcao.value];
+        });
+
+        el("rodape").textContent = t("rodape");
+        elTema.textContent =
+          document.documentElement.getAttribute("data-theme") === "dark"
+            ? t("temaClaro")
+            : t("temaEscuro");
+
+        document.querySelectorAll("[data-idioma]").forEach(function (botao) {
+          botao.setAttribute(
+            "aria-pressed",
+            String(botao.getAttribute("data-idioma") === idioma),
+          );
+        });
+
+        mostrarCotacoes();
+        calcular();
+      }
+
       function aplicarTema(tema) {
         document.documentElement.setAttribute("data-theme", tema);
-        elTema.textContent = tema === "dark" ? "Modo claro" : "Modo escuro";
-        elTema.setAttribute(
-          "aria-label",
-          tema === "dark" ? "Ativar modo claro" : "Ativar modo escuro",
-        );
+        elTema.textContent = tema === "dark" ? t("temaClaro") : t("temaEscuro");
       }
-      var temaSalvo = ler(CHAVE_TEMA);
+
+      // Cotações: o navegador não pode buscar o Brascambio direto (outro
+      // domínio, sem CORS), então lê o arquivo que o GitHub Actions gera a
+      // cada publicação, servido pelo mesmo endereço desta página.
+      function carregarCotacoes() {
+        return fetch("cotacoes.json", { cache: "no-cache" })
+          .then(function (resposta) {
+            if (!resposta.ok) throw new Error(String(resposta.status));
+            return resposta.json();
+          })
+          .then(function (dados) {
+            if (!(dados.usdToPyg > 0) || !(dados.usdToBrl > 0)) {
+              throw new Error("cotações inválidas");
+            }
+            cotacoesCompletas = dados;
+            cotacoes = { usdToPyg: dados.usdToPyg, usdToBrl: dados.usdToBrl };
+          })
+          .catch(function () {
+            cotacoesCompletas = null;
+            cotacoes = COTACOES_RESERVA;
+          })
+          .then(function () {
+            mostrarCotacoes();
+            calcular();
+          });
+      }
+
+      // Partida ----------------------------------------------------------
+      var temaSalvo = lerLocal(CHAVE_TEMA);
       var prefereEscuro =
         window.matchMedia &&
         window.matchMedia("(prefers-color-scheme: dark)").matches;
-      aplicarTema(temaSalvo || (prefereEscuro ? "dark" : "light"));
-      elTema.addEventListener("click", function () {
-        var novo =
-          document.documentElement.getAttribute("data-theme") === "dark"
-            ? "light"
-            : "dark";
-        aplicarTema(novo);
-        gravar(CHAVE_TEMA, novo);
-      });
+      document.documentElement.setAttribute(
+        "data-theme",
+        temaSalvo || (prefereEscuro ? "dark" : "light"),
+      );
 
+      aplicarIdioma(lerLocal(CHAVE_IDIOMA) || IDIOMA_PADRAO);
       carregarCotacoes();
-      calcular();
 
       elValor.addEventListener("input", calcular);
       elMoeda.addEventListener("change", calcular);
       document.querySelectorAll('input[name="tipo"]').forEach(function (radio) {
         radio.addEventListener("change", calcular);
       });
-      elUsdToPyg.addEventListener("change", salvarCotacoes);
-      elUsdToBrl.addEventListener("change", salvarCotacoes);
-      document
-        .getElementById("restaurar")
-        .addEventListener("click", function () {
-          aplicarCotacoes(COTACOES_PADRAO);
-          salvarCotacoes();
+      document.querySelectorAll("[data-idioma]").forEach(function (botao) {
+        botao.addEventListener("click", function () {
+          var novo = botao.getAttribute("data-idioma");
+          gravarLocal(CHAVE_IDIOMA, novo);
+          aplicarIdioma(novo);
         });
+      });
+      elTema.addEventListener("click", function () {
+        var novo =
+          document.documentElement.getAttribute("data-theme") === "dark"
+            ? "light"
+            : "dark";
+        aplicarTema(novo);
+        gravarLocal(CHAVE_TEMA, novo);
+      });
     </script>
   </body>
 </html>

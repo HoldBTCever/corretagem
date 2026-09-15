@@ -24,8 +24,32 @@ sobrou do anterior:
 | Century 21 Black | 10% | o saldo que sobrou |
 | **Corretor** | **45% da comissão** | — |
 
-As cotações usadas para converter entre as três moedas são editáveis na
-própria página e ficam guardadas no navegador de quem a abre.
+## Cotações
+
+As cotações vêm do [Brascambio](https://brascambio.com.py) (filial Matriz) e
+não são editáveis na página. O site publica duas taxas:
+
+| Publicado | Exemplo |
+|---|---|
+| Gs por 1 Real (transferência) | 1.100 |
+| Reais por 1 Dólar | 5,24 |
+
+O guarani por dólar não é publicado: sai da composição das duas
+(`1.100 × 5,24 = 5.764`).
+
+O navegador não pode buscar o Brascambio direto — é outro domínio e não há
+CORS liberado. Quem busca é `scripts/atualizar-cotacoes.mjs`, rodado pelo
+GitHub Actions a cada publicação (e três vezes por dia útil, pelo
+agendamento em `.github/workflows/pages.yml`); o resultado vai para
+`cotacoes.json`, que a página lê do mesmo endereço. Se a leitura falhar, a
+publicação continua com o `cotacoes.json` que está no repositório e a página
+mostra a data daquela leitura.
+
+## Idiomas
+
+A página abre em **espanhol** e tem botões para **português** e **inglês** no
+cabeçalho. A escolha fica guardada no navegador. Os textos estão todos no
+objeto `TEXTOS`, dentro do próprio `index.html`.
 
 ## Como publicar
 

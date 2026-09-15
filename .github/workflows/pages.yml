@@ -1,11 +1,17 @@
-# Publica o site estático no GitHub Pages a cada push na main.
-# Necessário quando, em Settings -> Pages, a "Source" está como
-# "GitHub Actions" — nesse modo o Pages não serve a branch sozinho.
+# Publica o site no GitHub Pages, sempre com as cotações do dia.
+#
+# As cotações são lidas do Brascambio na hora da publicação e entram no
+# pacote enviado ao Pages — por isso o agendamento: sem ele a página
+# continuaria mostrando a cotação do último push.
 name: Publicar no GitHub Pages
 
 on:
   push:
     branches: [main]
+  schedule:
+    # 09:30, 13:30 e 17:30 no Paraguai (UTC-3), de segunda a sexta.
+    # O Brascambio costuma publicar a cotação do dia por volta das 09:30.
+    - cron: "30 12,16,20 * * 1-5"
   workflow_dispatch:
 
 permissions:
@@ -26,6 +32,23 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Se o Brascambio estiver fora do ar ou mudar de formato, o passo
+      # falha sem derrubar a publicação: vai ao ar o cotacoes.json que já
+      # está no repositório, e a página mostra a data daquela leitura.
+      - name: Ler as cotações do Brascambio
+        id: cotacoes
+        continue-on-error: true
+        run: node scripts/atualizar-cotacoes.mjs
+
+      - name: Avisar se as cotações não foram atualizadas
+        if: steps.cotacoes.outcome == 'failure'
+        run: echo "::warning::Não deu para ler o Brascambio; publicando com o cotacoes.json do repositório."
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
