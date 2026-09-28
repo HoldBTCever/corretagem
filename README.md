@@ -13,7 +13,12 @@ A comissão do negócio é a que o cliente aceita no cadastro:
 | Tipo de negócio | Comissão |
 |---|---|
 | Venda | 2,75% sobre o valor total da compra |
-| Aluguel | 50% do valor equivalente a um aluguel |
+| Aluguel | 50% do valor equivalente a um aluguel, **por lado** |
+
+No aluguel, dono e inquilino pagam 50% de um aluguel cada um. Quando o
+corretor atende os dois, a caixa "sou o corretor dos dois lados" dobra a
+comissão do negócio (100% de um aluguel). A opção só aparece no aluguel —
+numa venda a comissão sai inteira do valor da compra.
 
 Dela saem os repasses, em cascata — cada um incidindo sobre o saldo que
 sobrou do anterior:

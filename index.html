@@ -142,6 +142,45 @@
         outline: 2px solid var(--gold);
         outline-offset: 2px;
       }
+      .dois-lados {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-top: 14px;
+        padding: 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        cursor: pointer;
+      }
+      .dois-lados:hover {
+        border-color: var(--gold);
+      }
+      .dois-lados:has(input:checked) {
+        border-color: var(--brand);
+      }
+      .dois-lados:has(input:focus-visible) {
+        outline: 2px solid var(--gold);
+        outline-offset: 2px;
+      }
+      .dois-lados input {
+        margin: 2px 0 0;
+        width: 17px;
+        height: 17px;
+        accent-color: var(--brand);
+        flex-shrink: 0;
+      }
+      .dois-lados-titulo {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+      .dois-lados-dica {
+        display: block;
+        margin-top: 2px;
+        font-size: 0.82rem;
+        color: var(--muted);
+      }
+
       .row {
         display: flex;
         flex-wrap: wrap;
@@ -382,6 +421,14 @@
           </div>
         </fieldset>
 
+        <label class="dois-lados" id="doisLadosCampo" hidden>
+          <input type="checkbox" id="doisLados" />
+          <span>
+            <span class="dois-lados-titulo" data-t="doisLadosLabel"></span>
+            <span class="dois-lados-dica" data-t="doisLadosDica"></span>
+          </span>
+        </label>
+
         <div class="row">
           <div>
             <label class="label" for="valor" id="valorRotulo"></label>
@@ -464,10 +511,14 @@
           marca: "Imóveis Assunção",
           titulo: "Mi corretaje",
           intro:
-            "Ingresá el valor del negocio y mirá cuánto te queda después de los traspasos, en las tres monedas. La comisión es la que el cliente acepta al registrarse — venta, 2,75% sobre el valor total de la compra; alquiler, 50% del equivalente a un alquiler — y de ella salen Century 21 Nacional y Century 21 Black, dejándote el 45%.",
+            "Ingresá el valor del negocio y mirá cuánto te queda después de los traspasos, en las tres monedas. La comisión es la que el cliente acepta al registrarse — venta, 2,75% sobre el valor total de la compra; alquiler, 50% del equivalente a un alquiler por cada lado que representás — y de ella salen Century 21 Nacional y Century 21 Black, dejándote el 45%.",
           tipoNegocio: "Tipo de negocio",
           venda: "Venta",
           aluguel: "Alquiler",
+          doisLadosLabel: "Soy el agente de las dos partes",
+          doisLadosDica:
+            "Del propietario y del inquilino: cada lado paga 50% de un alquiler, así que la comisión del negocio es el doble.",
+          doisLadosCurto: "dos lados",
           valorVenda: "Valor de la venta",
           valorAluguel: "Valor del alquiler mensual",
           moeda: "Moneda",
@@ -481,7 +532,7 @@
           comissaoDoNegocio: "Comisión del negocio",
           regras: {
             COMPRA: "2,75% sobre el valor total de la compra",
-            ALUGUEL: "50% del equivalente a un alquiler",
+            ALUGUEL: "50% del equivalente a un alquiler por lado",
           },
           doSaldo: "del saldo",
           suaCorretagem: "Tu corretaje",
@@ -504,10 +555,14 @@
           marca: "Imóveis Assunção",
           titulo: "Minha corretagem",
           intro:
-            "Informe o valor do negócio e veja quanto sobra para você depois dos repasses, nas três moedas. A comissão é a que o cliente aceita no cadastro — venda, 2,75% sobre o valor total da compra; aluguel, 50% do valor equivalente a um aluguel — e dela saem Century 21 Nacional e Century 21 Black, deixando 45% com você.",
+            "Informe o valor do negócio e veja quanto sobra para você depois dos repasses, nas três moedas. A comissão é a que o cliente aceita no cadastro — venda, 2,75% sobre o valor total da compra; aluguel, 50% do valor equivalente a um aluguel por lado que você representa — e dela saem Century 21 Nacional e Century 21 Black, deixando 45% com você.",
           tipoNegocio: "Tipo de negócio",
           venda: "Venda",
           aluguel: "Aluguel",
+          doisLadosLabel: "Sou o corretor dos dois lados",
+          doisLadosDica:
+            "Do dono e do inquilino: cada lado paga 50% de um aluguel, então a comissão do negócio é o dobro.",
+          doisLadosCurto: "dois lados",
           valorVenda: "Valor da venda",
           valorAluguel: "Valor do aluguel mensal",
           moeda: "Moeda",
@@ -521,7 +576,7 @@
           comissaoDoNegocio: "Comissão do negócio",
           regras: {
             COMPRA: "2,75% sobre o valor total da compra",
-            ALUGUEL: "50% do valor equivalente a um aluguel",
+            ALUGUEL: "50% do valor equivalente a um aluguel por lado",
           },
           doSaldo: "do saldo",
           suaCorretagem: "Sua corretagem",
@@ -544,10 +599,14 @@
           marca: "Imóveis Assunção",
           titulo: "My commission",
           intro:
-            "Enter the deal value and see what you keep after the splits, in all three currencies. The commission is the one the client accepts at sign-up — sale, 2.75% of the total purchase value; rental, 50% of one month's rent — and out of it come Century 21 Nacional and Century 21 Black, leaving you 45%.",
+            "Enter the deal value and see what you keep after the splits, in all three currencies. The commission is the one the client accepts at sign-up — sale, 2.75% of the total purchase value; rental, 50% of one month's rent for each side you represent — and out of it come Century 21 Nacional and Century 21 Black, leaving you 45%.",
           tipoNegocio: "Deal type",
           venda: "Sale",
           aluguel: "Rental",
+          doisLadosLabel: "I represent both sides",
+          doisLadosDica:
+            "Landlord and tenant: each side pays 50% of one month's rent, so the deal commission doubles.",
+          doisLadosCurto: "both sides",
           valorVenda: "Sale value",
           valorAluguel: "Monthly rent",
           moeda: "Currency",
@@ -561,7 +620,7 @@
           comissaoDoNegocio: "Deal commission",
           regras: {
             COMPRA: "2.75% of the total purchase value",
-            ALUGUEL: "50% of one month's rent",
+            ALUGUEL: "50% of one month's rent per side",
           },
           doSaldo: "of the balance",
           suaCorretagem: "Your commission",
@@ -615,6 +674,8 @@
       };
       var elValor = el("valor");
       var elValorRotulo = el("valorRotulo");
+      var elDoisLados = el("doisLados");
+      var elDoisLadosCampo = el("doisLadosCampo");
       var elMoeda = el("moeda");
       var elErro = el("erro");
       var elResultado = el("resultado");
@@ -689,6 +750,12 @@
       function tipoAtual() {
         return document.querySelector('input[name="tipo"]:checked').value;
       }
+      // Só o aluguel tem dois lados: o dono e o inquilino pagam 50% de um
+      // aluguel cada um. Numa venda a comissão sai inteira da compra.
+      function lados() {
+        return tipoAtual() === "ALUGUEL" && elDoisLados.checked ? 2 : 1;
+      }
+
       function fatiaDoCorretor() {
         return REPASSES.reduce(function (resto, r) {
           return resto * (1 - r.taxa);
@@ -713,6 +780,9 @@
         var bruto = elValor.value;
         var valor = lerValor(bruto);
 
+        elDoisLadosCampo.hidden = tipo !== "ALUGUEL";
+        var quantosLados = lados();
+
         elValorRotulo.textContent =
           tipo === "ALUGUEL" ? t("valorAluguel") : t("valorVenda");
         elResultadoRotulo.textContent = preencher(t("quantoFica"), {
@@ -728,11 +798,14 @@
           return;
         }
 
-        var comissao = valor * TAXAS[tipo];
+        var comissao = valor * TAXAS[tipo] * quantosLados;
 
         elListaCascata.textContent = "";
         linhaCascata(
-          t("comissaoDoNegocio") + " — " + t("regras")[tipo],
+          t("comissaoDoNegocio") +
+            " — " +
+            t("regras")[tipo] +
+            (quantosLados === 2 ? " × 2 (" + t("doisLadosCurto") + ")" : ""),
           formatar(comissao, moeda),
         );
 
@@ -869,6 +942,7 @@
       carregarCotacoes();
 
       elValor.addEventListener("input", calcular);
+      elDoisLados.addEventListener("change", calcular);
       elMoeda.addEventListener("change", calcular);
       document.querySelectorAll('input[name="tipo"]').forEach(function (radio) {
         radio.addEventListener("change", calcular);
