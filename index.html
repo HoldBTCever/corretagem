@@ -258,6 +258,10 @@
       .cascata .repasse dd {
         color: var(--muted);
       }
+      .cascata .teto dt,
+      .cascata .teto dd {
+        color: var(--gold);
+      }
       .cascata .liquido {
         border-top: 1px solid var(--border);
         padding-top: 8px;
@@ -421,6 +425,14 @@
           </div>
         </fieldset>
 
+        <label class="dois-lados" id="captacaoCampo" hidden>
+          <input type="checkbox" id="captacao" />
+          <span>
+            <span class="dois-lados-titulo" data-t="captacaoLabel"></span>
+            <span class="dois-lados-dica" data-t="captacaoDica"></span>
+          </span>
+        </label>
+
         <label class="dois-lados" id="doisLadosCampo" hidden>
           <input type="checkbox" id="doisLados" />
           <span>
@@ -493,6 +505,11 @@
         { chave: "nacional", rotulo: "Century 21 Nacional", taxa: 0.5 },
         { chave: "black", rotulo: "Century 21 Black", taxa: 0.1 },
       ];
+      // Captação de imóvel à venda: a comissão do negócio (antes dos
+      // repasses) não passa deste valor. É em guaranis, então em dólar ou
+      // real o teto é convertido pela cotação do dia.
+      var TETO_CAPTACAO_PYG = 15000000;
+
       var MOEDAS = ["USD", "PYG", "BRL"];
       var SIMBOLOS = { USD: "US$", PYG: "₲", BRL: "R$" };
 
@@ -515,6 +532,10 @@
           tipoNegocio: "Tipo de negocio",
           venda: "Venta",
           aluguel: "Alquiler",
+          captacaoLabel: "Es una captación mía",
+          captacaoDica:
+            "La comisión bruta de una captación de inmueble en venta está limitada a ₲ 15.000.000.",
+          tetoCaptacao: "Tope de la captación",
           doisLadosLabel: "Soy el agente de las dos partes",
           doisLadosDica:
             "Del propietario y del inquilino: cada lado paga 50% de un alquiler, así que la comisión del negocio es el doble.",
@@ -559,6 +580,10 @@
           tipoNegocio: "Tipo de negócio",
           venda: "Venda",
           aluguel: "Aluguel",
+          captacaoLabel: "É uma captação minha",
+          captacaoDica:
+            "A comissão bruta de uma captação de imóvel à venda é limitada a ₲ 15.000.000.",
+          tetoCaptacao: "Teto da captação",
           doisLadosLabel: "Sou o corretor dos dois lados",
           doisLadosDica:
             "Do dono e do inquilino: cada lado paga 50% de um aluguel, então a comissão do negócio é o dobro.",
@@ -603,6 +628,10 @@
           tipoNegocio: "Deal type",
           venda: "Sale",
           aluguel: "Rental",
+          captacaoLabel: "This is my own listing",
+          captacaoDica:
+            "Gross commission on a listing of a property for sale is capped at ₲ 15,000,000.",
+          tetoCaptacao: "Listing cap",
           doisLadosLabel: "I represent both sides",
           doisLadosDica:
             "Landlord and tenant: each side pays 50% of one month's rent, so the deal commission doubles.",
@@ -676,6 +705,8 @@
       var elValorRotulo = el("valorRotulo");
       var elDoisLados = el("doisLados");
       var elDoisLadosCampo = el("doisLadosCampo");
+      var elCaptacao = el("captacao");
+      var elCaptacaoCampo = el("captacaoCampo");
       var elMoeda = el("moeda");
       var elErro = el("erro");
       var elResultado = el("resultado");
@@ -781,6 +812,7 @@
         var valor = lerValor(bruto);
 
         elDoisLadosCampo.hidden = tipo !== "ALUGUEL";
+        elCaptacaoCampo.hidden = tipo !== "COMPRA";
         var quantosLados = lados();
 
         elValorRotulo.textContent =
@@ -808,6 +840,20 @@
             (quantosLados === 2 ? " × 2 (" + t("doisLadosCurto") + ")" : ""),
           formatar(comissao, moeda),
         );
+
+        // Captação de imóvel à venda: a comissão do negócio é limitada. O
+        // teto está em guaranis, então vira a moeda da tela antes de comparar.
+        if (tipo === "COMPRA" && elCaptacao.checked) {
+          var teto = converter(TETO_CAPTACAO_PYG, "PYG", moeda);
+          if (comissao > teto) {
+            comissao = teto;
+            linhaCascata(
+              t("tetoCaptacao") + " — " + formatar(TETO_CAPTACAO_PYG, "PYG"),
+              formatar(teto, moeda),
+              "teto",
+            );
+          }
+        }
 
         var saldo = comissao;
         REPASSES.forEach(function (repasse, indice) {
@@ -943,6 +989,7 @@
 
       elValor.addEventListener("input", calcular);
       elDoisLados.addEventListener("change", calcular);
+      elCaptacao.addEventListener("change", calcular);
       elMoeda.addEventListener("change", calcular);
       document.querySelectorAll('input[name="tipo"]').forEach(function (radio) {
         radio.addEventListener("change", calcular);

@@ -15,6 +15,13 @@ A comissão do negócio é a que o cliente aceita no cadastro:
 | Venda | 2,75% sobre o valor total da compra |
 | Aluguel | 50% do valor equivalente a um aluguel, **por lado** |
 
+Na venda, quando o imóvel é uma **captação** do corretor, a comissão bruta
+(antes dos repasses) é limitada a **₲ 15.000.000**. A caixa "é uma captação
+minha" aparece só na venda; se a comissão calculada passar do teto, a cascata
+mostra a linha do corte e os repasses incidem sobre o valor já limitado. O
+teto é em guaranis — em dólar ou real ele é convertido pela cotação do dia,
+então o valor de venda em que o teto começa a morder muda com o câmbio.
+
 No aluguel, dono e inquilino pagam 50% de um aluguel cada um. Quando o
 corretor atende os dois, a caixa "sou o corretor dos dois lados" dobra a
 comissão do negócio (100% de um aluguel). A opção só aparece no aluguel —
