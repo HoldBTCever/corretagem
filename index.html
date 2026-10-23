@@ -258,8 +258,8 @@
       .cascata .repasse dd {
         color: var(--muted);
       }
-      .cascata .teto dt,
-      .cascata .teto dd {
+      .cascata .piso dt,
+      .cascata .piso dd {
         color: var(--gold);
       }
       .cascata .liquido {
@@ -506,9 +506,9 @@
         { chave: "black", rotulo: "Century 21 Black", taxa: 0.1 },
       ];
       // Captação de imóvel à venda: a comissão do negócio (antes dos
-      // repasses) não passa deste valor. É em guaranis, então em dólar ou
-      // real o teto é convertido pela cotação do dia.
-      var TETO_CAPTACAO_PYG = 15000000;
+      // repasses) é no mínimo este valor. É em guaranis, então em dólar ou
+      // real o piso é convertido pela cotação do dia.
+      var PISO_CAPTACAO_PYG = 15000000;
 
       var MOEDAS = ["USD", "PYG", "BRL"];
       var SIMBOLOS = { USD: "US$", PYG: "₲", BRL: "R$" };
@@ -534,8 +534,8 @@
           aluguel: "Alquiler",
           captacaoLabel: "Es una captación mía",
           captacaoDica:
-            "La comisión bruta de una captación de inmueble en venta está limitada a ₲ 15.000.000.",
-          tetoCaptacao: "Tope de la captación",
+            "La comisión bruta de una captación de inmueble en venta es como mínimo ₲ 15.000.000.",
+          pisoCaptacao: "Mínimo de la captación",
           doisLadosLabel: "Soy el agente de las dos partes",
           doisLadosDica:
             "Del propietario y del inquilino: cada lado paga 50% de un alquiler, así que la comisión del negocio es el doble.",
@@ -582,8 +582,8 @@
           aluguel: "Aluguel",
           captacaoLabel: "É uma captação minha",
           captacaoDica:
-            "A comissão bruta de uma captação de imóvel à venda é limitada a ₲ 15.000.000.",
-          tetoCaptacao: "Teto da captação",
+            "A comissão bruta de uma captação de imóvel à venda é no mínimo ₲ 15.000.000.",
+          pisoCaptacao: "Piso da captação",
           doisLadosLabel: "Sou o corretor dos dois lados",
           doisLadosDica:
             "Do dono e do inquilino: cada lado paga 50% de um aluguel, então a comissão do negócio é o dobro.",
@@ -630,8 +630,8 @@
           aluguel: "Rental",
           captacaoLabel: "This is my own listing",
           captacaoDica:
-            "Gross commission on a listing of a property for sale is capped at ₲ 15,000,000.",
-          tetoCaptacao: "Listing cap",
+            "Gross commission on a listing of a property for sale is at least ₲ 15,000,000.",
+          pisoCaptacao: "Listing minimum",
           doisLadosLabel: "I represent both sides",
           doisLadosDica:
             "Landlord and tenant: each side pays 50% of one month's rent, so the deal commission doubles.",
@@ -841,16 +841,16 @@
           formatar(comissao, moeda),
         );
 
-        // Captação de imóvel à venda: a comissão do negócio é limitada. O
-        // teto está em guaranis, então vira a moeda da tela antes de comparar.
+        // Captação de imóvel à venda: a comissão do negócio tem um piso. O
+        // piso está em guaranis, então vira a moeda da tela antes de comparar.
         if (tipo === "COMPRA" && elCaptacao.checked) {
-          var teto = converter(TETO_CAPTACAO_PYG, "PYG", moeda);
-          if (comissao > teto) {
-            comissao = teto;
+          var piso = converter(PISO_CAPTACAO_PYG, "PYG", moeda);
+          if (comissao < piso) {
+            comissao = piso;
             linhaCascata(
-              t("tetoCaptacao") + " — " + formatar(TETO_CAPTACAO_PYG, "PYG"),
-              formatar(teto, moeda),
-              "teto",
+              t("pisoCaptacao") + " — " + formatar(PISO_CAPTACAO_PYG, "PYG"),
+              formatar(piso, moeda),
+              "piso",
             );
           }
         }
